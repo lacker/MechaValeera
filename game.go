@@ -21,6 +21,10 @@ type Game struct {
 	storm int    // number of things played this turn
 }
 
+func NewGame() *Game {
+	return &Game{board: []Card{}, hand: []Card{}, life: 30}
+}
+
 func main() {
 	fmt.Println("hello world")
 }

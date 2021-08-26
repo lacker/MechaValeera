@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/jinzhu/copier"
+)
 
 type Card int
 
@@ -79,9 +83,15 @@ func NewGame() *Game {
 	return &Game{board: []Card{}, hand: []Card{}, life: 30}
 }
 
+func (game Game) copy() *Game {
+	result := &Game{}
+	copier.Copy(game, result)
+	return result
+}
+
 // Mana cost of the card at the given index in hand
 // Handles discounts
-func (game *Game) cost(index int) int {
+func (game Game) cost(index int) int {
 	card := game.hand[index]
 	cost := card.cost()
 	cost -= game.scabbs * 3
@@ -92,7 +102,7 @@ func (game *Game) cost(index int) int {
 }
 
 // Whether we can play the card at the given index in hand
-func (game *Game) canPlay(index int) bool {
+func (game Game) canPlay(index int) bool {
 	card := game.hand[index]
 	if len(game.board) >= 7 && card.minion() {
 		// The board is full
@@ -103,7 +113,16 @@ func (game *Game) canPlay(index int) bool {
 
 // Play the card at the given index in hand
 func (game *Game) play(index int) {
-	panic("XXX")
+	card := game.hand[index]
+	game.mana -= game.cost(index)
+	game.hand = append(game.hand[:index], game.hand[index+1:]...)
+	if card.minion() {
+		game.board = append(game.board, card)
+	} else if card == COIN {
+		game.mana += 1
+	} else {
+		panic("unhandled card")
+	}
 }
 
 func main() {

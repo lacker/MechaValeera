@@ -125,6 +125,28 @@ func (game *Game) play(index int) {
 	}
 }
 
+type Move struct {
+	index int // which card in hand to play
+}
+
+func (game *Game) possibleMoves() []Move {
+	answer := []Move{}
+	for index := range game.hand {
+		if game.canPlay(index) {
+			answer = append(answer, Move{index})
+		}
+	}
+	return answer
+}
+
+func (game *Game) makeMove(move Move) {
+	game.play(move.index)
+}
+
+func (game *Game) isWin() bool {
+	return game.life <= 0
+}
+
 func main() {
 	fmt.Println("hello world")
 }

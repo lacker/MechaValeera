@@ -125,6 +125,15 @@ func (game *Game) play(index int) {
 	}
 }
 
+func (game *Game) hasShark() bool {
+	for _, card := range game.hand {
+		if card == SHARK {
+			return true
+		}
+	}
+	return false
+}
+
 type Move struct {
 	index int // which card in hand to play
 }

@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"time"
 
 	"github.com/jinzhu/copier"
 )
@@ -190,6 +192,36 @@ func (game *Game) makeMove(move Move) {
 
 func (game *Game) isWin() bool {
 	return game.life <= 0
+}
+
+// Returns:
+// whether we found a win
+// the sequences of moves to win
+// any error
+func (game *Game) findWinHelper(start time.Time, premoves []Move) (bool, []Move, error) {
+	if time.Since(start).Seconds() > 5 {
+		return false, nil, errors.New("Out of time")
+	}
+	if game.isWin() {
+		return true, premoves, nil
+	}
+	for _, move := range game.possibleMoves() {
+		copy := game.copy()
+		copy.makeMove(move)
+		answer, moves, err := copy.findWinHelper(start, append(premoves, move))
+		if err != nil || answer {
+			return answer, moves, err
+		}
+	}
+
+	// Our search is exhausted
+	return false, nil, nil
+}
+
+func (game *Game) findWin() (bool, []Move, error) {
+	start := time.Now()
+	premoves := []Move{}
+	return game.findWinHelper(start, premoves)
 }
 
 func main() {

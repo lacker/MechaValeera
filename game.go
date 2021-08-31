@@ -111,18 +111,54 @@ func (game Game) canPlay(index int) bool {
 	return game.mana >= game.cost(index)
 }
 
+func (game Game) addToHand(card Card) {
+	if len(game.hand) >= 10 {
+		return
+	}
+	game.hand = append(game.hand, card)
+}
+
+func (game Game) battlecryAndCombo(card Card) {
+	switch card {
+	case DANCER:
+		game.addToHand(COIN)
+	case FOXY:
+		game.foxy += 1
+	case PILLAGER:
+		if game.storm > 0 {
+			game.life -= game.storm
+		}
+	case SCABBS:
+		if game.storm > 0 {
+			game.scabbs += 1
+			game.nextScabbs += 1
+		}
+	}
+}
+
 // Play the card at the given index in hand
 func (game *Game) play(index int) {
 	card := game.hand[index]
 	game.mana -= game.cost(index)
 	game.hand = append(game.hand[:index], game.hand[index+1:]...)
+	game.foxy = 0
+	game.scabbs = game.nextScabbs
+	game.nextScabbs = 0
+
 	if card.minion() {
 		game.board = append(game.board, card)
-	} else if card == COIN {
-		game.mana += 1
-	} else {
-		panic("unhandled card")
 	}
+
+	game.battlecryAndCombo(card)
+	if game.hasShark() {
+		game.battlecryAndCombo(card)
+	}
+
+	if card == COIN {
+		game.mana += 1
+	}
+
+	game.storm += 1
 }
 
 func (game *Game) hasShark() bool {

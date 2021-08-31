@@ -1,4 +1,4 @@
-module github.com/MechaValeera
+module github.com/lacker/MechaValeera
 
 go 1.17
 

@@ -23,6 +23,7 @@ type CardData struct {
 	cost   int
 	minion bool
 	combo  bool
+	name   string
 }
 
 var CardDataMap = map[Card]CardData{
@@ -30,31 +31,37 @@ var CardDataMap = map[Card]CardData{
 		cost:   0,
 		minion: false,
 		combo:  false,
+		name:   "Coin",
 	},
 	DANCER: {
 		cost:   2,
 		minion: true,
 		combo:  false,
+		name:   "Dancer",
 	},
 	FOXY: {
 		cost:   2,
 		minion: true,
 		combo:  false,
+		name:   "Foxy",
 	},
 	PILLAGER: {
 		cost:   6,
 		minion: true,
 		combo:  true,
+		name:   "Pillager",
 	},
 	SCABBS: {
 		cost:   4,
 		minion: true,
 		combo:  true,
+		name:   "Scabbs",
 	},
 	SHARK: {
 		cost:   4,
 		minion: true,
 		combo:  false,
+		name:   "Shark",
 	},
 }
 
@@ -113,14 +120,14 @@ func (game Game) canPlay(index int) bool {
 	return game.mana >= game.cost(index)
 }
 
-func (game Game) addToHand(card Card) {
+func (game *Game) addToHand(card Card) {
 	if len(game.hand) >= 10 {
 		return
 	}
 	game.hand = append(game.hand, card)
 }
 
-func (game Game) battlecryAndCombo(card Card) {
+func (game *Game) battlecryAndCombo(card Card) {
 	switch card {
 	case DANCER:
 		game.addToHand(COIN)
@@ -205,7 +212,9 @@ func (game *Game) findWinHelper(start time.Time, premoves []Move) (bool, []Move,
 	if game.isWin() {
 		return true, premoves, nil
 	}
-	for _, move := range game.possibleMoves() {
+	possible := game.possibleMoves()
+	fmt.Println("possible moves:", possible)
+	for _, move := range possible {
 		copy := game.copy()
 		copy.makeMove(move)
 		answer, moves, err := copy.findWinHelper(start, append(premoves, move))
@@ -225,5 +234,23 @@ func (game *Game) findWin() (bool, []Move, error) {
 }
 
 func main() {
-	fmt.Println("hello world")
+	game := NewGame()
+	game.addToHand(COIN)
+	game.addToHand(PILLAGER)
+	game.mana = 5
+	game.life = 1
+
+	ok, moves, err := game.findWin()
+	if err != nil {
+		panic(err)
+	}
+
+	if ok {
+		println("win found:")
+		for _, move := range moves {
+			fmt.Println("move:", move)
+		}
+	} else {
+		println("no win found")
+	}
 }

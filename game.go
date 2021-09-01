@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"time"
-
-	"github.com/jinzhu/copier"
 )
 
 type Card int
@@ -93,9 +91,7 @@ func NewGame() *Game {
 }
 
 func (game Game) copy() *Game {
-	result := &Game{}
-	copier.Copy(game, result)
-	return result
+	return &game
 }
 
 // Mana cost of the card at the given index in hand
@@ -216,6 +212,9 @@ func (game *Game) findWinHelper(start time.Time, premoves []Move) (bool, []Move,
 	fmt.Println("possible moves:", possible)
 	for _, move := range possible {
 		copy := game.copy()
+		fmt.Printf("%+v\n", move)
+		fmt.Printf("%+v\n", game)
+		fmt.Printf("%+v\n", copy)
 		copy.makeMove(move)
 		answer, moves, err := copy.findWinHelper(start, append(premoves, move))
 		if err != nil || answer {

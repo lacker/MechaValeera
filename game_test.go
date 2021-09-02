@@ -6,7 +6,7 @@ import (
 
 func TestCanPlay(t *testing.T) {
 	game := NewGame()
-	game.addToHand(COIN)
+	game.addCardToHand(COIN)
 	if len(game.hand) != 1 {
 		t.Fatalf("addToHand did not work")
 	}

@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"sort"
 	"time"
 )
 
@@ -75,6 +76,20 @@ func (card Card) combo() bool {
 	return CardDataMap[card].combo
 }
 
+type CardSlice []Card
+
+func (cs CardSlice) Len() int {
+	return len(cs)
+}
+
+func (cs CardSlice) Swap(i, j int) {
+	cs[i], cs[j] = cs[j], cs[i]
+}
+
+func (cs CardSlice) Less(i, j int) bool {
+	return cs[i] < cs[j]
+}
+
 type Game struct {
 	board      []Card // our side of the board
 	hand       []Card // our hand
@@ -116,17 +131,24 @@ func (game Game) canPlay(index int) bool {
 	return game.mana >= game.cost(index)
 }
 
-func (game *Game) addToHand(card Card) {
-	if len(game.hand) >= 10 {
-		return
+func (game *Game) addCardsToHand(cards []Card) {
+	for _, card := range cards {
+		if len(game.hand) >= 10 {
+			break
+		}
+		game.hand = append(game.hand, card)
 	}
-	game.hand = append(game.hand, card)
+	sort.Sort(CardSlice(game.hand))
+}
+
+func (game *Game) addCardToHand(card Card) {
+	game.addCardsToHand([]Card{card})
 }
 
 func (game *Game) battlecryAndCombo(card Card) {
 	switch card {
 	case DANCER:
-		game.addToHand(COIN)
+		game.addCardToHand(COIN)
 	case FOXY:
 		game.foxy += 1
 	case PILLAGER:
@@ -234,8 +256,8 @@ func (game *Game) findWin() (bool, []Move, error) {
 
 func main() {
 	game := NewGame()
-	game.addToHand(COIN)
-	game.addToHand(PILLAGER)
+	game.addCardToHand(COIN)
+	game.addCardToHand(PILLAGER)
 	game.mana = 5
 	game.life = 1
 

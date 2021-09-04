@@ -15,11 +15,22 @@ func TestCanPlay(t *testing.T) {
 	}
 }
 
-func TestCanFindLethal(t *testing.T) {
+func TestCanFindTwoStepLethal(t *testing.T) {
 	game := NewGame()
 	game.addCardsToHand([]Card{COIN, PILLAGER})
 	game.mana = 5
 	game.life = 1
+	ok, _, _ := game.findWin()
+	if !ok {
+		t.Fatalf("could not find win")
+	}
+}
+
+func TestCanFindEightStepLethal(t *testing.T) {
+	game := NewGame()
+	game.addCardsToHand([]Card{DANCER, FOXY, PILLAGER, PILLAGER, SCABBS, SHARK})
+	game.mana = 6
+	game.life = 26
 	ok, _, _ := game.findWin()
 	if !ok {
 		t.Fatalf("could not find win")

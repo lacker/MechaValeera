@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -76,6 +77,10 @@ func (card Card) combo() bool {
 	return CardDataMap[card].combo
 }
 
+func (card Card) String() string {
+	return CardDataMap[card].name
+}
+
 type CardSlice []Card
 
 func (cs CardSlice) Len() int {
@@ -90,19 +95,44 @@ func (cs CardSlice) Less(i, j int) bool {
 	return cs[i] < cs[j]
 }
 
+func (cs CardSlice) String() string {
+	parts := []string{}
+	for _, card := range cs {
+		parts = append(parts, card.String())
+	}
+	return fmt.Sprintf("[%s]", strings.Join(parts, " "))
+}
+
 type Game struct {
-	board      []Card // our side of the board
-	hand       []Card // our hand
-	life       int    // the opponent's life
-	mana       int    // our mana
-	storm      int    // number of things played this turn
-	foxy       int    // number of stacks of the foxy effect
-	scabbs     int    // number of stacks of the scabbs effect
-	nextScabbs int    // number of stacks of the scabbs effect after this one
+	board      CardSlice // our side of the board
+	hand       CardSlice // our hand
+	life       int       // the opponent's life
+	mana       int       // our mana
+	storm      int       // number of things played this turn
+	foxy       int       // number of stacks of the foxy effect
+	scabbs     int       // number of stacks of the scabbs effect
+	nextScabbs int       // number of stacks of the scabbs effect after this one
 }
 
 func NewGame() *Game {
 	return &Game{board: []Card{}, hand: []Card{}, life: 30}
+}
+
+func (game Game) String() string {
+	parts := []string{fmt.Sprintf("board: %s\nhand: %s\nlife: %d\nmana: %d", game.board, game.hand, game.life, game.mana)}
+	if game.storm > 0 {
+		parts = append(parts, fmt.Sprintf("storm: %d", game.storm))
+	}
+	if game.foxy > 0 {
+		parts = append(parts, fmt.Sprintf("foxy: %d", game.foxy))
+	}
+	if game.scabbs > 0 {
+		parts = append(parts, fmt.Sprintf("scabbs: %d", game.scabbs))
+	}
+	if game.nextScabbs > 0 {
+		parts = append(parts, fmt.Sprintf("nextScabbs: %d", game.nextScabbs))
+	}
+	return strings.Join(parts, "\n")
 }
 
 func (game Game) copy() *Game {
@@ -234,10 +264,10 @@ func (game *Game) findWinHelper(start time.Time, premoves []Move) (bool, []Move,
 	fmt.Println("possible moves:", possible)
 	for _, move := range possible {
 		copy := game.copy()
-		fmt.Printf("%+v\n", move)
-		fmt.Printf("%+v\n", game)
-		fmt.Printf("%+v\n", copy)
+		fmt.Printf("game: %+v\n", copy)
+		fmt.Printf("move: %+v\n", move)
 		copy.makeMove(move)
+		fmt.Printf("next: %+v\n", copy)
 		answer, moves, err := copy.findWinHelper(start, append(premoves, move))
 		if err != nil || answer {
 			return answer, moves, err

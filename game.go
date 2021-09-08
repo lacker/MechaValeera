@@ -103,6 +103,12 @@ func (cs CardSlice) String() string {
 	return fmt.Sprintf("[%s]", strings.Join(parts, " "))
 }
 
+func (cs CardSlice) copy() CardSlice {
+	answer := make([]Card, len(cs))
+	copy(answer, cs)
+	return answer
+}
+
 type Game struct {
 	board      CardSlice // our side of the board
 	hand       CardSlice // our hand
@@ -136,7 +142,10 @@ func (game Game) String() string {
 }
 
 func (game Game) copy() *Game {
-	return &game
+	copy := &game
+	copy.board = game.board.copy()
+	copy.hand = game.hand.copy()
+	return copy
 }
 
 // Mana cost of the card at the given index in hand
@@ -219,7 +228,7 @@ func (game *Game) play(index int) {
 }
 
 func (game *Game) hasShark() bool {
-	for _, card := range game.hand {
+	for _, card := range game.board {
 		if card == SHARK {
 			return true
 		}
@@ -264,10 +273,11 @@ func (game *Game) findWinHelper(start time.Time, premoves []Move) (bool, []Move,
 	fmt.Println("possible moves:", possible)
 	for _, move := range possible {
 		copy := game.copy()
-		fmt.Printf("game: %+v\n", copy)
-		fmt.Printf("move: %+v\n", move)
+		fmt.Printf("\n------\n\ngame: %+v\n", game)
+		fmt.Printf("\ncopy: %+v\n", copy)
+		fmt.Printf("\nmove: %+v\n", move)
 		copy.makeMove(move)
-		fmt.Printf("next: %+v\n", copy)
+		fmt.Printf("after the move, the board becomes:\n%+v\n", copy)
 		answer, moves, err := copy.findWinHelper(start, append(premoves, move))
 		if err != nil || answer {
 			return answer, moves, err

@@ -11,7 +11,8 @@ import (
 type Card int
 
 const (
-	COIN Card = iota
+	BRICK Card = iota
+	COIN
 	DANCER
 	FOXY
 	PILLAGER
@@ -27,6 +28,12 @@ type CardData struct {
 }
 
 var CardDataMap = map[Card]CardData{
+	BRICK: {
+		cost:   11,
+		minion: false,
+		combo:  false,
+		name:   "Brick",
+	},
 	COIN: {
 		cost:   0,
 		minion: false,

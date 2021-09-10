@@ -16,6 +16,7 @@ const (
 	DANCER
 	FOXY
 	PILLAGER
+	POTION
 	SCABBS
 	SHARK
 )
@@ -57,6 +58,12 @@ var CardDataMap = map[Card]CardData{
 		minion: true,
 		combo:  true,
 		name:   "Pillager",
+	},
+	POTION: {
+		cost:   4,
+		minion: false,
+		combo:  false,
+		name:   "Potion",
 	},
 	SCABBS: {
 		cost:   4,

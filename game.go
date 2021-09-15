@@ -134,6 +134,10 @@ func (cis CardInstanceSlice) Len() int {
 	return len(cis)
 }
 
+func (cis CardInstanceSlice) Swap(i, j int) {
+	cis[i], cis[j] = cis[j], cis[i]
+}
+
 type Game struct {
 	board      CardSlice // our side of the board
 	hand       CardSlice // our hand

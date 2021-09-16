@@ -138,6 +138,11 @@ func (cis CardInstanceSlice) Swap(i, j int) {
 	cis[i], cis[j] = cis[j], cis[i]
 }
 
+func (cis CardInstanceSlice) Less(i, j int) bool {
+	// TODO: break ties consistently
+	return cis[i].card < cis[j].card
+}
+
 type Game struct {
 	board      CardSlice // our side of the board
 	hand       CardSlice // our hand

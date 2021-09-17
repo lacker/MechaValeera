@@ -130,6 +130,14 @@ type CardInstance struct {
 
 type CardInstanceSlice []CardInstance
 
+func (ci CardInstance) sortScore() int {
+	score := 2 * int(ci.card)
+	if ci.potion {
+		score += 1
+	}
+	return score
+}
+
 func (cis CardInstanceSlice) Len() int {
 	return len(cis)
 }
@@ -139,8 +147,7 @@ func (cis CardInstanceSlice) Swap(i, j int) {
 }
 
 func (cis CardInstanceSlice) Less(i, j int) bool {
-	// TODO: break ties consistently
-	return cis[i].card < cis[j].card
+	return cis[i].sortScore() < cis[j].sortScore()
 }
 
 type Game struct {

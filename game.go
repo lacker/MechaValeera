@@ -129,8 +129,11 @@ type CardInstance struct {
 }
 
 func (ci CardInstance) String() string {
-	// TODO: improve
-	return ci.card.String()
+	parts := []string{ci.card.String()}
+	if ci.potion {
+		parts = append(parts, "(1 mana 1/1)")
+	}
+	return strings.Join(parts, " ")
 }
 
 type CardInstanceSlice []CardInstance

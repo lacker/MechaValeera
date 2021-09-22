@@ -136,6 +136,13 @@ func (ci CardInstance) String() string {
 	return strings.Join(parts, " ")
 }
 
+func (ci CardInstance) cost() int {
+	if ci.potion {
+		return 1
+	}
+	return ci.card.cost()
+}
+
 type CardInstanceSlice []CardInstance
 
 func (ci CardInstance) sortScore() int {
@@ -166,19 +173,25 @@ func (cis CardInstanceSlice) String() string {
 	return fmt.Sprintf("[%s]", strings.Join(parts, ", "))
 }
 
+func (cis CardInstanceSlice) copy() CardInstanceSlice {
+	answer := make([]CardInstance, len(cis))
+	copy(answer, cis)
+	return answer
+}
+
 type Game struct {
-	board      CardSlice // our side of the board
-	hand       CardSlice // our hand
-	life       int       // the opponent's life
-	mana       int       // our mana
-	storm      int       // number of things played this turn
-	foxy       int       // number of stacks of the foxy effect
-	scabbs     int       // number of stacks of the scabbs effect
-	nextScabbs int       // number of stacks of the scabbs effect after this one
+	board      CardSlice         // our side of the board
+	hand       CardInstanceSlice // our hand
+	life       int               // the opponent's life
+	mana       int               // our mana
+	storm      int               // number of things played this turn
+	foxy       int               // number of stacks of the foxy effect
+	scabbs     int               // number of stacks of the scabbs effect
+	nextScabbs int               // number of stacks of the scabbs effect after this one
 }
 
 func NewGame() *Game {
-	return &Game{board: []Card{}, hand: []Card{}, life: 30}
+	return &Game{board: []Card{}, hand: []CardInstance{}, life: 30}
 }
 
 func (game Game) String() string {
@@ -211,7 +224,7 @@ func (game Game) cost(index int) int {
 	card := game.hand[index]
 	cost := card.cost()
 	cost -= game.scabbs * 3
-	if card.combo() {
+	if card.card.combo() {
 		cost -= game.foxy * 2
 	}
 	return cost
@@ -220,7 +233,7 @@ func (game Game) cost(index int) int {
 // Whether we can play the card at the given index in hand
 func (game Game) canPlay(index int) bool {
 	card := game.hand[index]
-	if len(game.board) >= 7 && card.minion() {
+	if len(game.board) >= 7 && card.card.minion() {
 		// The board is full
 		return false
 	}

@@ -281,8 +281,8 @@ func (game *Game) play(index int) {
 	game.scabbs = game.nextScabbs
 	game.nextScabbs = 0
 
-	if card.minion() {
-		game.board = append(game.board, card)
+	if card.card.minion() {
+		game.board = append(game.board, card.card)
 	}
 
 	game.battlecryAndCombo(card)

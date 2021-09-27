@@ -289,12 +289,12 @@ func (game *Game) play(index int) {
 		game.board = append(game.board, card.card)
 	}
 
-	game.battlecryAndCombo(card)
+	game.battlecryAndCombo(card.card)
 	if game.hasShark() {
-		game.battlecryAndCombo(card)
+		game.battlecryAndCombo(card.card)
 	}
 
-	if card == COIN {
+	if card.card == COIN {
 		game.mana += 1
 	}
 

@@ -296,6 +296,8 @@ func (game *Game) play(index int) {
 
 	if card.card == COIN {
 		game.mana += 1
+	} else if card.card == POTION {
+		panic("XXX")
 	}
 
 	game.storm += 1

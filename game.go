@@ -249,9 +249,9 @@ func (game *Game) addCardsToHand(cards []Card) {
 		if len(game.hand) >= 10 {
 			break
 		}
-		game.hand = append(game.hand, card)
+		game.hand = append(game.hand, MakeCardInstance(card))
 	}
-	sort.Sort(CardSlice(game.hand))
+	sort.Sort(CardInstanceSlice(game.hand))
 }
 
 func (game *Game) addCardToHand(card Card) {

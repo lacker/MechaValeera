@@ -254,6 +254,10 @@ func (game *Game) addCardsToHand(cards []Card) {
 	sort.Sort(CardInstanceSlice(game.hand))
 }
 
+func (game *Game) addCardInstancesToHand(cards []Card) {
+	panic("XXX")
+}
+
 func (game *Game) addCardToHand(card Card) {
 	game.addCardsToHand([]Card{card})
 }

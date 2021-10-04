@@ -39,4 +39,5 @@ func TestCanFindEightStepLethal(t *testing.T) {
 
 func TestCanFindPotionLethal(t *testing.T) {
 	game := NewGame()
+	game.addCardsToHand([]Card{SHARK, FOXY, SCABBS, PILLAGER, POTION})
 }

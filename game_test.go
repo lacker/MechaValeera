@@ -42,4 +42,5 @@ func TestCanFindPotionLethal(t *testing.T) {
 	game.addCardsToHand([]Card{SHARK, FOXY, SCABBS, PILLAGER, POTION})
 	game.mana = 7
 	game.life = 20
+	ok, _, _ := game.findWin()
 }

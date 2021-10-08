@@ -43,4 +43,7 @@ func TestCanFindPotionLethal(t *testing.T) {
 	game.mana = 7
 	game.life = 20
 	ok, _, _ := game.findWin()
+	if !ok {
+		t.Fatalf("could not find win")
+	}
 }

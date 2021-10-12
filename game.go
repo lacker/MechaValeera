@@ -244,6 +244,7 @@ func (game Game) canPlay(index int) bool {
 	return game.mana >= game.cost(index)
 }
 
+// XXX make this use aCITH
 func (game *Game) addCardsToHand(cards []Card) {
 	for _, card := range cards {
 		if len(game.hand) >= 10 {
@@ -255,7 +256,13 @@ func (game *Game) addCardsToHand(cards []Card) {
 }
 
 func (game *Game) addCardInstancesToHand(cards []CardInstance) {
-	panic("XXX")
+	for _, ci := range cards {
+		if len(game.hand) >= 10 {
+			break
+		}
+		game.hand = append(game.hand, ci)
+	}
+	sort.Sort(CardInstanceSlice(game.hand))
 }
 
 func (game *Game) addCardToHand(card Card) {

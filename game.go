@@ -244,7 +244,13 @@ func (game Game) canPlay(index int) bool {
 	return game.mana >= game.cost(index)
 }
 
-// XXX make this use aCITH
+func (game *Game) addCardInstanceToHand(ci CardInstance) {
+	if len(game.hand) < 10 {
+		game.hand = append(game.hand, ci)
+	}
+}
+
+// XXX clean up all these four similar fns
 func (game *Game) addCardsToHand(cards []Card) {
 	for _, card := range cards {
 		if len(game.hand) >= 10 {

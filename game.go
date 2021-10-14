@@ -244,29 +244,27 @@ func (game Game) canPlay(index int) bool {
 	return game.mana >= game.cost(index)
 }
 
-func (game *Game) addCardInstanceToHand(ci CardInstance) {
-	if len(game.hand) < 10 {
-		game.hand = append(game.hand, ci)
-	}
-}
-
-// XXX clean up all these four similar fns
-func (game *Game) addCardsToHand(cards []Card) {
-	for _, card := range cards {
-		if len(game.hand) >= 10 {
-			break
-		}
-		game.hand = append(game.hand, MakeCardInstance(card))
-	}
-	sort.Sort(CardInstanceSlice(game.hand))
-}
-
 func (game *Game) addCardInstancesToHand(cards []CardInstance) {
 	for _, ci := range cards {
 		if len(game.hand) >= 10 {
 			break
 		}
 		game.hand = append(game.hand, ci)
+	}
+	sort.Sort(CardInstanceSlice(game.hand))
+}
+
+func (game *Game) addCardInstanceToHand(ci CardInstance) {
+	game.addCardInstancesToHand([]CardInstance{ci})
+}
+
+// XXX make this use acith
+func (game *Game) addCardsToHand(cards []Card) {
+	for _, card := range cards {
+		if len(game.hand) >= 10 {
+			break
+		}
+		game.hand = append(game.hand, MakeCardInstance(card))
 	}
 	sort.Sort(CardInstanceSlice(game.hand))
 }

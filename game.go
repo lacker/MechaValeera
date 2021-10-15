@@ -258,15 +258,12 @@ func (game *Game) addCardInstanceToHand(ci CardInstance) {
 	game.addCardInstancesToHand([]CardInstance{ci})
 }
 
-// XXX make this use acith
 func (game *Game) addCardsToHand(cards []Card) {
+	cis := []CardInstance{}
 	for _, card := range cards {
-		if len(game.hand) >= 10 {
-			break
-		}
-		game.hand = append(game.hand, MakeCardInstance(card))
+		cis = append(cis, MakeCardInstance(card))
 	}
-	sort.Sort(CardInstanceSlice(game.hand))
+	game.addCardInstancesToHand(cis)
 }
 
 func (game *Game) addCardToHand(card Card) {

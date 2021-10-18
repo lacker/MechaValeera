@@ -309,7 +309,9 @@ func (game *Game) play(index int) {
 	if card.card == COIN {
 		game.mana += 1
 	} else if card.card == POTION {
-		panic("XXX")
+		for _, creature := range game.board {
+			panic("XXX")
+		}
 	}
 
 	game.storm += 1

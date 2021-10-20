@@ -313,7 +313,7 @@ func (game *Game) play(index int) {
 		for _, creature := range game.board {
 			cis = append(cis, CardInstance{card: creature, potion: true})
 		}
-		// XXX
+		game.addCardInstancesToHand(cis)
 	}
 
 	game.storm += 1

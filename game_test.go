@@ -47,3 +47,7 @@ func TestCanFindPotionLethal(t *testing.T) {
 		t.Fatalf("could not find win")
 	}
 }
+
+func TestCannotFindNonexistentPotionLethal(t *testing.T) {
+	// XXX
+}
